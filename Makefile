@@ -6,7 +6,7 @@ all:
 	fdisk -l kernel.bin
 
 run: all
-	qemu-system-x86_64 -drive file=kernel.bin,format=raw
+	qemu-system-x86_64 kernel.bin
 
 clean:
 	make -C bin clean
