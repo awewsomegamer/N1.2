@@ -10,4 +10,4 @@ override CFLAGS := 	   \
 all: $(COBJS)
 
 %.o : %.c
-	gcc -c $< -o ../bin/$@ $(CFLAGS)
+	gcc -c $< -o ../bin/32_bin/$@ $(CFLAGS)

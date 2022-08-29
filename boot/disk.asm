@@ -36,4 +36,18 @@
 ; 		ret
 
 chs_read:
-	ret
+	mov ah, 0x02
+	mov ch, 0x00
+	mov cl, 0x02
+	mov dh, 0x00
+	mov dl, [BOOT_DISK]
+	mov bx, SECOND_STAGE
+
+	int 0x13
+
+	jnc .ret
+
+	jmp $
+
+	.ret:
+	ret	
