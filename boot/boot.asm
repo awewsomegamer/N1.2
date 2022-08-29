@@ -20,7 +20,7 @@ jmp SECOND_STAGE
 BOOT_DISK: db 0x0
 
 SECOND_STAGE equ 0x8000
-SECTORS_TO_READ equ 7
+SECTORS_TO_READ equ 9
 
 times 510-($-$$) db 0x0
 dw 0xAA55
