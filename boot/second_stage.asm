@@ -5,56 +5,18 @@ mov ah, 0x0E
 mov al, 'A'
 int 0x10
 
-; Retrieve memory map from BIOS
-pushad
-get_mmap:
-mov ax, 0
-mov es, ax
-mov di, _MEMORY_MAP_DATA
-
-xor ebx, ebx
-
-.loop:
-	mov byte [_MEMORY_MAP_ENTRIES_FOUND], bl
-	
-	xor edx, edx
-	xor eax, eax
-
-	mov edx, 0x534D4150
-	mov eax, 0xE820
-	mov ecx, 24
-
-	int 0x15
-
-	jc .error
-	cmp eax, 0x534D4150
-	jne .error
-
-	add di, 24
-	
-	cmp ebx, 0
-	jne .loop
-
-	jmp .success		
-
-.error:
-	mov ah, 0x0E
-	mov al, 'B'
-	int 0x10
-
-	jmp $
-
-.success:
-popad
+call get_memory_map
 
 ; Success
 mov ah, 0x0E
 mov al, 'A'
+add al, byte [_MEMORY_MAP_ENTRIES_FOUND]
 int 0x10
+
+; Switch to VESA video mode - figure out target mode
 
 jmp $
 
-; Switch to VESA video mode - figure out target mode
 
 ; Switch to 32-bit PM
 	; Pre-kernel
@@ -68,6 +30,8 @@ jmp $
 
 
 ; Memory map
+%include "memory_map.asm"
+
 MAX_MEMORY_MAP_ENTRIES equ 50
 
 [global _MEMORY_MAP_ENTRIES_FOUND]
