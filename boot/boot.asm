@@ -2,11 +2,17 @@
 
 mov [BOOT_DISK], dl
 
+xor ax, ax
+mov ds, ax
+mov es, ax
+mov fs, ax
+mov gs, ax
+mov ss, ax
+
 mov bx, BOOT_MESSAGE
 call print_string
 
-mov al, SECTORS_TO_READ
-call chs_read
+call read_disk
 
 mov bx, DISK_READ_MESSAGE
 call print_string

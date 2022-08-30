@@ -21,7 +21,7 @@ do_vesa:
 		int 0x10
 		call .error_check
 		pop eax
-		
+
 		add eax, 2
 
 		push eax
