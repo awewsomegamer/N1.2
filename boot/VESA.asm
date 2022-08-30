@@ -68,6 +68,14 @@ do_vesa:
 		.ret: ret
 
 	.end:
+		; Retrieve final information
+		mov cx, [_TOP_VESA_MODE]
+		mov ax, 0x4F01
+		mov di, _VESA_VIDEO_MODE_INFO
+		int 0x10
+		call .error_check
+
+		; Switch video mode
 		mov ax, 0x4F02
 		mov bx, word [_TOP_VESA_MODE]
 		int 0x10

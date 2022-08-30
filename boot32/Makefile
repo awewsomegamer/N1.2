@@ -6,7 +6,6 @@ override CFLAGS := 	   \
     -fno-stack-protector   \
     -fno-pic               \
     -m32                   
-
 all: $(COBJS)
 
 %.o : %.c

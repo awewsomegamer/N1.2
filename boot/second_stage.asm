@@ -22,6 +22,19 @@ call do_vesa
 mov bx, SUCCESSFULLY_ENABLED_VESA
 call print_string
 
+; Get BIOS font
+get_font:
+
+mov ax, 0x1130
+mov bh, 0x6
+int 0x10
+mov si, bp
+mov di, _VIDEO_FONT
+mov ax, 0x0
+mov ds, ax
+mov ecx, 0x1000
+rep movsd
+
 cli
 
 ; Enable A20
@@ -81,6 +94,7 @@ _TOP_VESA_WIDTH: dw 0x0
 _TOP_VESA_HEIGHT: dw 0x0
 _TOP_VESA_MODE: dw 0x0
 _TOP_VESA_BPP: db 0x0
+
 ; Memory map
 %include "memory_map.asm"
 
@@ -96,5 +110,8 @@ MEMORY_MAP_ENTRIES_FOUND_MESSAGE: db "Number of memory map entries found is ", 0
 SUCCESSFULLY_REACHED_STAGE_TWO: db "Successfully made it to second stage", 0xA, 0xD, 0x0
 SUCCESSFULLY_ENABLED_VESA: db "Successfully enabled VESA mode", 0xA, 0xD, 0x0
 VESA_ALGORITHM_ENCOUNTERED_ERROR: db "Vesa algorithm encoutnered an error", 0xA, 0xD, 0x0
+
+[global _VIDEO_FONT]
+_VIDEO_FONT: resb 0x1000
 
 times 2048 db 0x0
