@@ -1,99 +1,56 @@
 [bits 16]
 
-; Success
-mov ah, 0x0E
-mov al, 'A'
-int 0x10
+mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
 
 call get_memory_map
 
-; Success
-mov ah, 0x0E
+; Memory map success
+mov bx, MEMORY_MAP_ENTRIES_FOUND_MESSAGE
+call print_string
 mov al, 'A'
 add al, byte [_MEMORY_MAP_ENTRIES_FOUND]
 int 0x10
-
-; Switch to VESA video mode
-do_vesa:
-
-mov ax, 0
-mov es, ax
-mov di, _BIOS_VESA_INFO
-mov ax, 0x4F00
+mov al, 0xA
 int 0x10
-call .error_check
+mov al, 0xD
+int 0x10
 
-; EAX - current pointer to the mode
-mov eax, dword [_BIOS_VESA_INFO + 14]
+; Switch video mode to VESA
+call do_vesa
 
-.loop:
-	cmp word [eax], 0xFFFF
-	je .end
+; Vesa success
+mov bx, SUCCESSFULLY_ENABLED_VESA
+call print_string
 
-	push eax
-	mov cx, word [eax]
-	mov ax, 0x4F01
-	mov di, _VESA_VIDEO_MODE_INFO
-	int 0x10
-	call .error_check
-	pop eax
-	
-	add eax, 2
+cli
 
-	push eax
-	mov ax, [_TOP_VESA_WIDTH]
-	cmp word [_VESA_VIDEO_MODE_INFO + 18], ax
-	pop eax
-	jl .loop
-	push eax
-	mov ax, [_TOP_VESA_HEIGHT]
-	cmp word [_VESA_VIDEO_MODE_INFO + 20], ax
-	pop eax
-	jl .loop
-	push eax
-	mov al, [_TOP_VESA_BPP]
-	cmp byte [_VESA_VIDEO_MODE_INFO + 25], al
-	pop eax
-	jl .loop
+; Enable A20
+in al, 0x92
+or al, 2
+out 0x92, al
 
-	push eax
-	mov ax, word [_VESA_VIDEO_MODE_INFO + 18]
-	mov word [_TOP_VESA_WIDTH], ax
-	mov ax, word [_VESA_VIDEO_MODE_INFO + 20]
-	mov word [_TOP_VESA_HEIGHT], ax 
-	mov al, byte [_VESA_VIDEO_MODE_INFO + 25]
-	mov byte [_TOP_VESA_BPP], al
-	pop eax
+lgdt [GDTR]
 
-	push eax
-	mov ax, word [eax]
-	mov word [_TOP_VESA_MODE], ax
-	pop eax
+mov eax, cr0
+or al, 1
+mov cr0, eax
 
-	jmp .loop
+jmp 0x08:PROTECTED_MODE
 
-.error_check:
-	cmp ax, 0x004F
-	je .ret
+[bits 32]
+[extern protected_mode_entry]
 
-	mov ah, 0x0E
-	mov al, 'B'
-	int 0x10
+PROTECTED_MODE:
+	mov ax, 0x10
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov ss, ax
+	mov gs, ax
+
+	call protected_mode_entry
+
 	jmp $
-
-	.ret: ret
-
-.end:
-	mov ax, 0x4F02
-	mov bx, word [_TOP_VESA_MODE]
-	int 0x10
-	call .error_check
-
-	mov ah, 0x0E
-	mov al, 'A'
-	int 0x10
-
-jmp $
 
 
 ; Switch to 32-bit PM
@@ -106,7 +63,14 @@ jmp $
 	; Hand control to 64 bit kernel
 	
 
+[bits 16]
+
+%include "GDT.asm"
+%include "print.asm"
+
 ; VESA information
+%include "VESA.asm"
+
 [global _BIOS_VESA_INFO]
 _BIOS_VESA_INFO: resb 512
 
@@ -127,5 +91,10 @@ _MEMORY_MAP_ENTRIES_FOUND: db 0x0
 
 [global _MEMORY_MAP_DATA]
 _MEMORY_MAP_DATA: resb 24 * MAX_MEMORY_MAP_ENTRIES
+
+MEMORY_MAP_ENTRIES_FOUND_MESSAGE: db "Number of memory map entries found is ", 0x0
+SUCCESSFULLY_REACHED_STAGE_TWO: db "Successfully made it to second stage", 0xA, 0xD, 0x0
+SUCCESSFULLY_ENABLED_VESA: db "Successfully enabled VESA mode", 0xA, 0xD, 0x0
+VESA_ALGORITHM_ENCOUNTERED_ERROR: db "Vesa algorithm encoutnered an error", 0xA, 0xD, 0x0
 
 times 2048 db 0x0

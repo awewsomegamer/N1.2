@@ -5,17 +5,17 @@ GDT_ZERO:
 GDT_CODE:
 	dw 0xFFFF
 	dw 0x0000
-	db 0xFF
+	db 0x00
 
 	db 10011010b ; Access
 	db 11001111b ; Flags | Limit
 
 	db 0x00
 
-GDT_CODE:
+GDT_DATA:
 	dw 0xFFFF
 	dw 0x0000
-	db 0xFF
+	db 0x00
 
 	db 10010010b ; Access
 	db 11001111b ; Flags | Limit

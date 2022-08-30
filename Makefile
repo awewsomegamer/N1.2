@@ -1,6 +1,6 @@
 all:
 	make -C boot
-	# make -C boot32
+	make -C boot32
 	make -C bin
 
 	fdisk -l kernel.bin
