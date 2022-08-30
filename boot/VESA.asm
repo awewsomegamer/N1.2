@@ -82,3 +82,30 @@ do_vesa:
 		call .error_check
 
 		ret
+
+; Get BIOS font
+get_font:
+	push bp
+	push ds
+	push es
+
+	mov ax, 0x1130
+	mov bh, 0x6
+	int 0x10
+
+	; Flip
+	mov ax, es
+	mov ds, ax
+	mov ax, 0
+	mov es, ax
+
+	mov di, _VIDEO_FONT
+	mov si, bp
+	mov cx, 0x1000 / 4
+	rep movsd
+
+	pop es
+	pop ds
+	pop bp
+	
+	ret

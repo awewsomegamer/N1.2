@@ -17,23 +17,11 @@ int 0x10
 
 ; Switch video mode to VESA
 call do_vesa
+call get_font
 
 ; Vesa success
 mov bx, SUCCESSFULLY_ENABLED_VESA
 call print_string
-
-; Get BIOS font
-get_font:
-
-mov ax, 0x1130
-mov bh, 0x6
-int 0x10
-mov si, bp
-mov di, _VIDEO_FONT
-mov ax, 0x0
-mov ds, ax
-mov ecx, 0x1000
-rep movsd
 
 cli
 

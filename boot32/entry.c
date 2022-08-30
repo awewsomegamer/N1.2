@@ -53,28 +53,32 @@ uint32_t cy = 0;
 			*((uint8_t*)framebuffer + 1 + y * _VESA_VIDEO_MODE_INFO.pitch + x * _VESA_VIDEO_MODE_INFO.bpp / 8) = (color >> 8) & 0xFF; \ 
 			*((uint8_t*)framebuffer + 0 + y * _VESA_VIDEO_MODE_INFO.pitch + x * _VESA_VIDEO_MODE_INFO.bpp / 8) = color & 0xFF; \
 
+void putc(char c) {
+	uint8_t* data = &_VIDEO_FONT + c * FONT_HEIGHT;
+	// print_num(data, 16);
+
+	int rx = 0;
+	for (int i = 0; i < FONT_HEIGHT; i++) {
+		for (int j = FONT_WIDTH - 1; j >= 0; j--) {
+			if ((data[i] >> j) & 1) {
+				PUT_PIXEL((rx + cx), (i + cy), 0xFFFFFF);
+			}
+			rx++;
+		}
+
+		rx = 0;
+	}
+
+	cx += FONT_WIDTH;
+}
+
 const char* numbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void print_num(int num, int base) {
 	if (num / base != 0)
 		print_num(num / base, base);
 
-	asm volatile ( "outb %0, %1" : : "a"((*(numbers + (num % base)))), "Nd"(0xE9) );
-}
-
-void putc(char c) {
-	uint8_t* data = &_VIDEO_FONT + c * FONT_HEIGHT;
-	print_num(data, 16);
-
-	for (int i = 0; i < FONT_HEIGHT; i++) {
-		for (int j = 0; j < FONT_WIDTH; j++) {
-			if ((data[i] >> j) & 1) {
-				PUT_PIXEL((j + cx), (i + cy), 0xFFFFFF);
-			}
-		}
-	}
-
-	cx += FONT_WIDTH;
+	putc((*numbers + (num % base)));
 }
 
 void protected_mode_entry() {
@@ -85,6 +89,10 @@ void protected_mode_entry() {
 			PUT_PIXEL(j, i, 0xFF);
 		}
 
-	// for (char c = 'A'; c <= 'Z'; c++)
-		// putc('A');
+
+	print_num(_VESA_VIDEO_MODE_INFO.width, 10);
+	putc('x');
+	print_num(_VESA_VIDEO_MODE_INFO.height, 10);
+	putc('x');
+	print_num(_VESA_VIDEO_MODE_INFO.bpp, 10);
 }
