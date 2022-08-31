@@ -53,7 +53,6 @@ PROTECTED_MODE:
 
 	jmp $
 
-
 ; Switch to 32-bit PM
 	; Pre-kernel
 	; Generate PML4 map
