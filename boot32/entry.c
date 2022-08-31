@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdarg.h>
 
 #define FONT_WIDTH 8
 #define FONT_HEIGHT 16
@@ -74,11 +75,57 @@ void putc(char c) {
 
 const char* numbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-void print_num(int num, int base) {
+void putn(uint32_t num, int base) {
 	if (num / base != 0)
-		print_num(num / base, base);
+		putn(num / base, base);
 
 	putc((*numbers + (num % base)));
+}
+
+void puts(char* s) {
+	while (*s)
+		putc(*s++);
+}
+
+void printf(char* form, ...) {
+	va_list args;
+	va_start(args, form);
+
+	uint8_t found_arg = 0;
+
+	while (*form) {
+		if (*form == '%') {
+			form++;
+
+			switch (*form) {
+			case 'd':
+				putn(va_arg(args, int), 10);
+				found_arg = 1;
+				break;
+
+			case 'X':
+				putn(va_arg(args, int), 10);
+				found_arg = 1;
+				break;
+
+			case 's':
+				puts(va_arg(args, char*));
+				found_arg = 1;
+				break;
+
+			case 'c':
+				putc(va_arg(args, int));
+				found_arg = 1;
+				break;
+			}
+		}
+
+		if (!found_arg)
+			putc(*form);
+
+		found_arg = 0;
+		form++;
+	}
 }
 
 void protected_mode_entry() {
@@ -90,9 +137,5 @@ void protected_mode_entry() {
 		}
 
 
-	print_num(_VESA_VIDEO_MODE_INFO.width, 10);
-	putc('x');
-	print_num(_VESA_VIDEO_MODE_INFO.height, 10);
-	putc('x');
-	print_num(_VESA_VIDEO_MODE_INFO.bpp, 10);
+	printf("Resolution: %dx%d%x%d", _VESA_VIDEO_MODE_INFO.width, _VESA_VIDEO_MODE_INFO.height, _VESA_VIDEO_MODE_INFO.bpp);
 }

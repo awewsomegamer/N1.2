@@ -5,7 +5,8 @@ override CFLAGS := 	   \
     -ffreestanding         \
     -fno-stack-protector   \
     -fno-pic               \
-    -m32                   
+    -m32
+
 all: $(COBJS)
 
 %.o : %.c
