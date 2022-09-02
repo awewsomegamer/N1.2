@@ -9,7 +9,6 @@ LD64FLAGS := \
 	--oformat binary \
 	-L/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.1/32/libgcc.a
 
-
 all:
 	ld $(LD32FLAGS) second_stage_asm.o ./32_bin/* -o second_stage.bin
 	ld $(LD64FLAGS) long_mode_asm.o  ./64_bin/* -o kernel.bin

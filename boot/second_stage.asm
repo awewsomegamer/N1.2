@@ -85,7 +85,7 @@ PROTECTED_MODE:
 	mov gs, ax
 	mov ss, ax
 
-	jmp CODE64_OFFSET:LONG_MODE
+	jmp CODE64_OFFSET:LONG_MODE_ENTRY
 
 cpuid_check:
 	pushfd
@@ -142,10 +142,6 @@ long_mode_check:
 	; Identity page first page table
 	; Good practice to load ISRs for some basic error handling
 
-[bits 64]
-LONG_MODE:
-	jmp $
-
 ; Switch to 64-bit Long Mode
 	; Hand control to 64 bit kernel
 	
@@ -188,6 +184,7 @@ CPUID_NOT_FOUND: db "No CPUID was found", 0xA, 0xD, 0x0
 NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0xD, 0x0
 NO_LONG_MODE_FOUND: db "Long mode was found", 0xA, 0xD, 0x0
 ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
+LONG_MODE_ENTRY equ 0xC004
 
 [global _VIDEO_FONT]
 _VIDEO_FONT: resb 0x1000
