@@ -36,20 +36,104 @@ mov eax, cr0
 or al, 1
 mov cr0, eax
 
-jmp 0x08:PROTECTED_MODE
+jmp CODE32_OFFSET:PROTECTED_MODE
 
 [bits 32]
 [extern protected_mode_entry]
+[extern puts]
+[extern pml4]
 
 PROTECTED_MODE:
-	mov ax, 0x10
+	mov ax, DATA32_OFFSET
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov ss, ax
 	mov gs, ax
-
+	
 	call protected_mode_entry
+
+	call cpuid_check
+	call long_mode_check
+
+	mov edx, cr4
+	or edx, (1 << 5)
+	mov cr4, edx
+
+	mov ecx, 0xC0000080
+	rdmsr
+	or eax, (1 << 8)
+	wrmsr
+
+	mov eax, pml4
+	mov cr3, eax
+
+	mov ebx, cr0
+	or ebx, (1 << 31)
+	mov cr0, ebx
+
+	mov ax, DATA64_OFFSET
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	mov ss, ax
+
+	jmp CODE64_OFFSET:LONG_MODE
+
+cpuid_check:
+	pushfd
+	pop eax
+	mov ecx, eax
+
+	xor eax, 1 << 21
+
+	push eax
+	popfd
+
+	pushfd
+	pop eax
+	push ecx
+	popfd
+
+	xor eax, ecx
+	jnz .ret
+
+	push CPUID_NOT_FOUND
+	call puts
+	jmp $
+
+	.ret:
+	ret
+
+long_mode_check:
+	mov eax, 0x80000000
+	cpuid
+	cmp eax, 0x80000001
+	jge .next
+
+	push NO_EXTENDED_FUNCTIONS_FOUND
+	call puts
+	jmp $
+
+	.next:
+
+	mov eax, 0x80000001
+	cpuid
+	test edx, 1 << 29
+	jnz .ret
+
+	push NO_LONG_MODE_FOUND
+	call puts
+	jmp $
+
+	.ret:
+	ret
+
+[bits 64]
+
+LONG_MODE:
+	push ENTERED_LONG_MODE
 
 	jmp $
 
@@ -97,6 +181,10 @@ MEMORY_MAP_ENTRIES_FOUND_MESSAGE: db "Number of memory map entries found is ", 0
 SUCCESSFULLY_REACHED_STAGE_TWO: db "Successfully made it to second stage", 0xA, 0xD, 0x0
 SUCCESSFULLY_ENABLED_VESA: db "Successfully enabled VESA mode", 0xA, 0xD, 0x0
 VESA_ALGORITHM_ENCOUNTERED_ERROR: db "Vesa algorithm encoutnered an error", 0xA, 0xD, 0x0
+CPUID_NOT_FOUND: db "No CPUID was found", 0xA, 0xD, 0x0
+NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0xD, 0x0
+NO_LONG_MODE_FOUND: db "Long mode was found", 0xA, 0xD, 0x0
+ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
 
 [global _VIDEO_FONT]
 _VIDEO_FONT: resb 0x1000

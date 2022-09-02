@@ -51,7 +51,7 @@ void screen_init();
 void clrscr();
 void putc(char c);
 void puts(char* s);
-void putn(uint32_t num, int base);
+void putn(uint32_t num, uint32_t base);
 void printf(char* form, ...);
 
 #endif

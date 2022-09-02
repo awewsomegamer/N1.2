@@ -17,7 +17,7 @@ struct page_map_entry {
 	uint8_t reserved1 : 1;
 	uint16_t avl3 : 10;
 	uint8_t xd : 1;
-};
+} __attribute__((packed));
 
 struct page_table_entry {
 	uint8_t present : 1;
@@ -35,7 +35,7 @@ struct page_table_entry {
 	uint8_t avl2 : 6;
 	uint8_t pk : 3;
 	uint8_t xd : 1;
-};
+} __attribute__((packed));
 
 void create_pml4();
 

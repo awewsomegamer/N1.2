@@ -67,11 +67,11 @@ void putc(char c) {
 
 const char* numbers = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-void putn(uint32_t num, int base) {
+void putn(uint32_t num, uint32_t base) {
 	if (num / base != 0)
 		putn(num / base, base);
 
-	putc((*numbers + (num % base)));
+	putc((*(numbers + (num % base))));
 }
 
 void puts(char* s) {
@@ -91,12 +91,12 @@ void printf(char* form, ...) {
 
 			switch (*form) {
 			case 'd':
-				putn(va_arg(args, int), 10);
+				putn(va_arg(args, uint32_t), 10);
 				found_arg = 1;
 				break;
 
 			case 'X':
-				putn(va_arg(args, int), 10);
+				putn(va_arg(args, uint32_t), 16);
 				found_arg = 1;
 				break;
 
