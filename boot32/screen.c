@@ -1,7 +1,7 @@
 #include <screen.h>
 
 extern uint8_t _VIDEO_FONT;
-uint32_t* framebuffer;
+uint8_t* framebuffer;
 
 uint32_t cx = 0;
 uint32_t cy = 0;
@@ -12,7 +12,7 @@ uint32_t cy = 0;
 			*((uint8_t*)framebuffer + 0 + y * _VESA_VIDEO_MODE_INFO.pitch + x * _VESA_VIDEO_MODE_INFO.bpp / 8) = color & 0xFF; \
 
 void screen_init() {
-	framebuffer = (uint32_t*)_VESA_VIDEO_MODE_INFO.framebuffer;
+	framebuffer = (uint8_t*)_VESA_VIDEO_MODE_INFO.framebuffer;
 }
 
 void clrscr() {

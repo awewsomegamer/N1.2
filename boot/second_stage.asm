@@ -32,6 +32,7 @@ out 0x92, al
 
 lgdt [GDTR]
 
+; Enable PE bit
 mov eax, cr0
 or al, 1
 mov cr0, eax
@@ -44,6 +45,7 @@ jmp CODE32_OFFSET:PROTECTED_MODE
 [extern pml4]
 
 PROTECTED_MODE:
+	; Update segments
 	mov ax, DATA32_OFFSET
 	mov ds, ax
 	mov es, ax
@@ -51,23 +53,27 @@ PROTECTED_MODE:
 	mov ss, ax
 	mov gs, ax
 	
+	; Do more complicated things in C
 	call protected_mode_entry
 
+	; Checks for 64 bit mode
 	call cpuid_check
 	call long_mode_check
 
+	; Set PAE bit
 	mov edx, cr4
 	or edx, (1 << 5)
 	mov cr4, edx
 
+	; Set LME
 	mov ecx, 0xC0000080
 	rdmsr
 	or eax, (1 << 8)
 	wrmsr
 
+	; Load PML4 table
 	mov eax, pml4
 	mov cr3, eax
-
 	mov ebx, cr0
 	or ebx, (1 << 31)
 	mov cr0, ebx
@@ -138,8 +144,7 @@ long_mode_check:
 
 [bits 64]
 LONG_MODE:
-	hlt
-	jmp LONG_MODE
+	jmp $
 
 ; Switch to 64-bit Long Mode
 	; Hand control to 64 bit kernel
