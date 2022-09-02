@@ -56,6 +56,7 @@ PROTECTED_MODE:
 	call cpuid_check
 	call long_mode_check
 
+
 	mov edx, cr4
 	or edx, (1 << 5)
 	mov cr4, edx
@@ -79,8 +80,7 @@ PROTECTED_MODE:
 	mov gs, ax
 	mov ss, ax
 
-	jmp $
-	; jmp CODE64_OFFSET:LONG_MODE
+	jmp CODE64_OFFSET:LONG_MODE
 
 cpuid_check:
 	pushfd
@@ -136,6 +136,11 @@ long_mode_check:
 	; Generate PML4 map
 	; Identity page first page table
 	; Good practice to load ISRs for some basic error handling
+
+[bits 64]
+LONG_MODE:
+	hlt
+	jmp LONG_MODE
 
 ; Switch to 64-bit Long Mode
 	; Hand control to 64 bit kernel

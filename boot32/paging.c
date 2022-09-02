@@ -8,20 +8,20 @@ struct page_map_entry pdt[512] __attribute__((aligned(0x1000))); // Address = [x
 struct page_table_entry pt[512] __attribute__((aligned(0x1000))); // Address = base physical address (pages) (struct page_table_entry)
 
 void create_pml4() {
-	pml4[0].next_entry_address = (uint64_t)&pdpt >> 12;
+	pml4[0].next_entry_address = (((uint64_t)&pdpt) & 0xFFFFFFFFFFFFF000) >> 12;
 	pml4[0].present = 1;
 	pml4[0].rw = 1;
 
-	pdpt[0].next_entry_address = (uint64_t)&pdt >> 12;
+	pdpt[0].next_entry_address = (((uint64_t)&pdt) & 0xFFFFFFFFFFFFF000) >> 12;
 	pdpt[0].present = 1;
 	pdpt[0].rw = 1;
 
-	pdt[0].next_entry_address = (uint64_t)&pt >> 12;
+	pdt[0].next_entry_address = (((uint64_t)&pt) & 0xFFFFFFFFFFFFF000) >> 12;
 	pdt[0].present = 1;
 	pdt[0].rw = 1;
 
 	for (int i = 0; i < 512; i++) {
-		pt[i].physical_address_base = i * 0x1000;
+		pt[i].physical_address_base = i;
 		pt[i].present = 1;
 		pt[i].rw = 1;
 	}
