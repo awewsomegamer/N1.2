@@ -26,13 +26,6 @@ void create_pml4() {
 		pt[i].rw = 1;
 	}
 	
-	// pml4[0] = (uint64_t)&pdpt | (0b11); // Load address and set present and RW flags
-	// pdpt[0] = (uint64_t)&pdt  | (0b11);
-	// pdt[0]  = (uint64_t)&pt   | (0b11);
-	
-	// for (int i = 0; i < 512; i++)
-	// 	pt[i] = (i * 0x1000) | (0b11);
-
 	printf("Identity paged virtual 0x0 -> virtual 0x%X\n", 512 * 0x1000);
 	printf("PML4 table located at 0x%X\n", &pml4);
 	printf("PDPT table located at 0x%X\n", &pdpt);

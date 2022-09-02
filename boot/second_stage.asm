@@ -56,7 +56,6 @@ PROTECTED_MODE:
 	call cpuid_check
 	call long_mode_check
 
-
 	mov edx, cr4
 	or edx, (1 << 5)
 	mov cr4, edx
