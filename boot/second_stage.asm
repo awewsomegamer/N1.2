@@ -79,7 +79,8 @@ PROTECTED_MODE:
 	mov gs, ax
 	mov ss, ax
 
-	jmp CODE64_OFFSET:LONG_MODE
+	jmp $
+	; jmp CODE64_OFFSET:LONG_MODE
 
 cpuid_check:
 	pushfd
@@ -129,13 +130,6 @@ long_mode_check:
 
 	.ret:
 	ret
-
-[bits 64]
-
-LONG_MODE:
-	push ENTERED_LONG_MODE
-
-	jmp $
 
 ; Switch to 32-bit PM
 	; Pre-kernel

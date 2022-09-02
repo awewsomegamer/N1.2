@@ -1,12 +1,13 @@
-LDFLAGS := \
+LD32FLAGS := \
 	-T linker.ld \
-	--oformat binary \
 	-melf_i386 \
 	-L/usr/lib/gcc/x86_64-pc-linux-gnu/12.1.1/32/libgcc.a
 
 	
 all:
-	ld $(LDFLAGS) second_stage.o ./32_bin/* -o kernel.bin
+	ld $(LD32FLAGS) second_stage.o ./32_bin/* -o second_inter.o
+	
+
 	cat boot.bin kernel.bin > ../kernel.bin
 
 clean:
