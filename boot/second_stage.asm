@@ -77,13 +77,25 @@ PROTECTED_MODE:
 	mov ebx, cr0
 	or ebx, (1 << 31)
 	mov cr0, ebx
-
+	
+	; Change segment selectors
 	mov ax, DATA64_OFFSET
 	mov ds, ax
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
 	mov ss, ax
+
+	; Pass information to the kernel
+	push _MEMORY_MAP_ENTRIES_FOUND
+	push _MEMORY_MAP_DATA
+	push _BIOS_VESA_INFO
+	push _VESA_VIDEO_MODE_INFO
+	push _TOP_VESA_WIDTH
+	push _TOP_VESA_HEIGHT
+	push _TOP_VESA_BPP
+	push _TOP_VESA_MODE
+	push _VIDEO_FONT
 
 	jmp CODE64_OFFSET:LONG_MODE_ENTRY
 
