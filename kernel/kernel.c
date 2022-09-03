@@ -1,12 +1,49 @@
-/*
+#include <stdint.h>
 
-How to enter the 64 bit kernel, idea, may not be the best one or even the correct one but it is an idea:
+struct VESA_INFO {
+	uint16_t attributes;
+	uint8_t window_a;	
+	uint8_t window_b;	
+	uint16_t granularity;
+	uint16_t window_size;
+	uint16_t segment_a;
+	uint16_t segment_b;
+	uint32_t win_func_ptr;		
+	uint16_t pitch;			
+	uint16_t width;			
+	uint16_t height;			
+	uint8_t w_char;			
+	uint8_t y_char;			
+	uint8_t planes;
+	uint8_t bpp;			
+	uint8_t banks;			
+	uint8_t memory_model;
+	uint8_t bank_size;		
+	uint8_t image_pages;
+	uint8_t reserved0;
+ 
+	uint8_t red_mask;
+	uint8_t red_position;
+	uint8_t green_mask;
+	uint8_t green_position;
+	uint8_t blue_mask;
+	uint8_t blue_position;
+	uint8_t reserved_mask;
+	uint8_t reserved_position;
+	uint8_t direct_color_attributes;
+ 
+	uint32_t framebuffer;		
+	uint32_t off_screen_mem_off;
+	uint16_t off_screen_mem_size;	
+	uint8_t reserved1[206];
+} __attribute__ ((packed));
 
-Assign a memory address where it is expected for the 64 bit kernel to be.
-After putting the processor in the 64 bit mode, far jump to that know address
-The 64 bit kernel will clean up some things, such as relocating the pages to a
-higher memory address and scraping all valuable information from the bootloader
-and putting into another memory address. At which point it will free up the
-bootloader, and start doing regular kernel work.
+extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 
-*/
+void kmain() {
+	for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
+		for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++)
+			*((uint32_t*)_VESA_VIDEO_MODE_INFO->framebuffer + i * _VESA_VIDEO_MODE_INFO->pitch + j * (_VESA_VIDEO_MODE_INFO->bpp / 8)) = 0xFF;
+
+	for (;;);
+}

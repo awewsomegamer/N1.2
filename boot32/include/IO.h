@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef __32IO_H__
+#define __32IO_H__
 
 #include <global.h>
 

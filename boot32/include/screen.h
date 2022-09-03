@@ -1,5 +1,5 @@
-#ifndef SCREEN_H
-#define SCREEN_H
+#ifndef __32SCREEN_H__
+#define __32SCREEN_H__
 
 #include <global.h>
 #include <stdarg.h>
