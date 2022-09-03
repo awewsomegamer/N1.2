@@ -40,10 +40,52 @@ struct VESA_INFO {
 
 extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 
+/*
+	Plan:
+
+	Create a PMM
+		- Interpret recieved memory map entries
+		- Clean up given memory map entries
+			- Overlapping entries are mapped into one if of the same type
+			- Memory entries are organized in descending order based on base address
+		- Notation of entry types
+		- Notations of memory regions
+		- Make a malloc
+			- Find next free address
+		- Make a free
+			- Find the entry which a pointer is at
+			- Mark it as free
+	
+	Create a VMM
+		- Create page tables
+			- Swap the old CR3 for the new page tables
+		- Load new PML4 structure into memory
+		- Make a malloc
+			- Figure out steps to making a virtual malloc
+		- Make a free
+			- Figure out steps to making a virtual free
+
+	kmain:
+		Using afore mentioned functions:
+			- Map the framebuffer so text can be displayed
+			- Copy all relevant information from the bootloader into the kernel
+			- Free up the space used by the bootloader
+			- Relocate the kernel to the higher half of virtual memory
+			- Port boot32 screen functions to kernel
+			
+		Do the following after above is done:
+			- clrscr();
+			- printf("+-----------------------+");
+			- printf("| N1.2 Operating System |");
+			- printf("+-----------------------+");
+			- printf("Entered 64 bit long mode");
+*/
+
+
 void kmain() {
-	for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
-		for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++)
-			*((uint32_t*)_VESA_VIDEO_MODE_INFO->framebuffer + i * _VESA_VIDEO_MODE_INFO->pitch + j * (_VESA_VIDEO_MODE_INFO->bpp / 8)) = 0xFF;
+	// for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
+	// 	for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++)
+	// 		*((uint32_t*)_VESA_VIDEO_MODE_INFO->framebuffer + i * _VESA_VIDEO_MODE_INFO->pitch + j * (_VESA_VIDEO_MODE_INFO->bpp / 8)) = 0xFF;
 
 	for (;;);
 }
