@@ -5,7 +5,8 @@ override CFLAGS := 	   \
     -ffreestanding         \
     -fno-stack-protector   \
     -fno-pic               \
-    -m64                   
+    -m64                   \
+    -I ./include
     
 #-I ./include           
     

@@ -37,6 +37,6 @@ struct page_table_entry {
 	uint8_t xd : 1;
 } __attribute__((packed));
 
-void create_pml4();
+void identity_prw_map(uint64_t physical, uint64_t virtual, size_t length);
 
 #endif
