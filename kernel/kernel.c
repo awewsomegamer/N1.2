@@ -83,9 +83,13 @@ extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 
 
 void kmain() {
-	// for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
-	// 	for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++)
-	// 		*((uint32_t*)_VESA_VIDEO_MODE_INFO->framebuffer + i * _VESA_VIDEO_MODE_INFO->pitch + j * (_VESA_VIDEO_MODE_INFO->bpp / 8)) = 0xFF;
+	for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
+		for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++) {
+			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 2 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0x0;
+			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 1 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0x0;
+			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 0 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0xFF;
+		}
+			
 
 	for (;;);
 }

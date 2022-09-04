@@ -27,7 +27,7 @@ BOOT_MESSAGE: db "N1.2 Bootloader loaded", 0xA, 0xD, 0x0
 DISK_READ_MESSAGE: db "Disk read", 0xA, 0xD, 0x0
 
 SECOND_STAGE equ 0x8000
-SECTORS_TO_READ equ 33
+SECTORS_TO_READ equ 34
 
 times 510-($-$$) db 0x0
 dw 0xAA55

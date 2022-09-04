@@ -50,6 +50,11 @@ void putc(char c) {
 
 	uint8_t* data = &_VIDEO_FONT + c * FONT_HEIGHT;
 
+	for (int i = cy; i < cy + FONT_HEIGHT; i++)
+		for (int j = cx; j < cx + FONT_WIDTH; j++) {
+			PUT_PIXEL(j, i, (j*i % 0xFF));
+		}
+
 	int rx = 0;
 	for (int i = 0; i < FONT_HEIGHT; i++) {
 		for (int j = FONT_WIDTH - 1; j >= 0; j--) {
