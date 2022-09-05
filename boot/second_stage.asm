@@ -59,7 +59,7 @@ PROTECTED_MODE:
 	; Checks for 64 bit mode
 	call cpuid_check
 	call long_mode_check
-
+	
 	; Set PAE bit
 	mov edx, cr4
 	or edx, (1 << 5)
@@ -192,7 +192,7 @@ CPUID_NOT_FOUND: db "No CPUID was found", 0xA, 0xD, 0x0
 NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0xD, 0x0
 NO_LONG_MODE_FOUND: db "Long mode was found", 0xA, 0xD, 0x0
 ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
-LONG_MODE_ENTRY equ 0xC004
+LONG_MODE_ENTRY equ 0xD000
 
 [global _VIDEO_FONT]
 _VIDEO_FONT: resb 0x1000
