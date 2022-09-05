@@ -38,8 +38,8 @@ struct VESA_INFO {
 	uint8_t reserved1[206];
 } __attribute__ ((packed));
 
-extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
-
+extern struct VESA_INFO _VESA_VIDEO_MODE_INFO;
+// extern uint8_t NUMBERS;
 /*
 	Plan:
 
@@ -81,15 +81,35 @@ extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 			- printf("Entered 64 bit long mode");
 */
 
+// void outb(uint16_t address, uint8_t value) {
+// 	asm volatile("outb %0, %1" : : "a"(value), "Nd"(address));
+// }
+
+// void print_num(uint32_t num, uint32_t base) {
+// 	if (num / base != 0)
+// 		print_num(num / base, base);
+
+// 	outb(0xE9, (*(NUMBERS + (num % base))));
+// }
 
 void kmain() {
-	for (int i = 0; i < _VESA_VIDEO_MODE_INFO->height; i++)
-		for (int j = 0; j < _VESA_VIDEO_MODE_INFO->width; j++) {
-			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 2 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0x0;
-			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 1 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0x0;
-			*((uint8_t*)_VESA_VIDEO_MODE_INFO->framebuffer + 0 + i * _VESA_VIDEO_MODE_INFO->pitch + j * _VESA_VIDEO_MODE_INFO->bpp / 8) = 0xFF;
+	// *(uint8_t*)_VESA_VIDEO_MODE_INFO.framebuffer = 0x0;
+
+	// *(uint8_t*)0xFB000000 = 0x00;
+
+	// print_num(_VESA_VIDEO_MODE_INFO.framebuffer, 16);
+	// outb(0xE9, '\n');
+	// outb(0xE9, *((uint8_t*)&NUMBERS + 1));
+	// outb(0xE9, '\n');
+
+	struct VESA_INFO info = *(&_VESA_VIDEO_MODE_INFO);
+
+	for (int i = 0; i < info.height; i++)
+		for (int j = 0; j < info.width; j++) {
+			*((uint8_t*)info.framebuffer + 2 + i * info.pitch + j * info.bpp / 8) = 0xFF;
+			*((uint8_t*)info.framebuffer + 1 + i * info.pitch + j * info.bpp / 8) = 0x00;
+			*((uint8_t*)info.framebuffer + 0 + i * info.pitch + j * info.bpp / 8) = 0x00;
 		}
-			
 
 	for (;;);
 }
