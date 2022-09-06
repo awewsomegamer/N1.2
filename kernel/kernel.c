@@ -95,7 +95,7 @@ extern struct VESA_INFO _VESA_VIDEO_MODE_INFO;
 void kmain() {
 	// *(uint8_t*)_VESA_VIDEO_MODE_INFO.framebuffer = 0x0;
 
-	// *(uint8_t*)0xFB000010 = 0x00;
+	*(uint8_t*)0xFB000010 = 0x00;
 
 	// print_num(_VESA_VIDEO_MODE_INFO.framebuffer, 16);
 	// outb(0xE9, '\n');
