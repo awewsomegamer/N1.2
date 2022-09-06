@@ -220,9 +220,7 @@ void init_idt() {
 }
 
 void kmain() {
-	init_idt();
-
-	// *(uint8_t*)_VESA_VIDEO_MODE_INFO.framebuffer = 0x0;
+	// init_idt();
 
 	// *(uint8_t*)0xFB000010 = 0x00;
 
@@ -231,14 +229,18 @@ void kmain() {
 	// outb(0xE9, *((uint8_t*)&NUMBERS + 1));
 	// outb(0xE9, '\n');
 
-	// struct VESA_INFO info = *(&_VESA_VIDEO_MODE_INFO);
+	struct VESA_INFO info = *(&_VESA_VIDEO_MODE_INFO);
 
-	// for (int i = 0; i < info.height; i++)
-	// 	for (int j = 0; j < info.width; j++) {
-	// 		*((uint8_t*)info.framebuffer + 2 + i * info.pitch + j * info.bpp / 8) = 0xFF;
-	// 		*((uint8_t*)info.framebuffer + 1 + i * info.pitch + j * info.bpp / 8) = 0x00;
-	// 		*((uint8_t*)info.framebuffer + 0 + i * info.pitch + j * info.bpp / 8) = 0x00;
-	// 	}
+	for (int i = 0; i < 720*2; i++)
+		for (int j = 0; j < 1280; j++) {
+			*(uint16_t*)(0xFD000000 + j + i * 1280) = 0x00;
+
+			// *((uint8_t*)0xFD000000 + 2 + i * (1280 / 8) + j * 2) = 0xFF;
+			// *((uint8_t*)0xFD000000 + 1 + i * (1280 / 8) + j * 2) = 0x00;
+			// *((uint8_t*)0xFD000000 + 0 + i * (1280 / 8) + j * 2) = 0x00;
+		}
+
+	// *(uint8_t*)0x200000 = 0xA;
 
 	for (;;);
 }

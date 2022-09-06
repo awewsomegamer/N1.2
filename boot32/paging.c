@@ -7,6 +7,7 @@ struct page_map_entry pml4[512] __attribute__((aligned(0x1000))); // Address = [
 struct page_map_entry pdpt[512] __attribute__((aligned(0x1000))); // Address = [x]PD[0] (page directories) (struct page_map_entry)
 struct page_map_entry pdt[512] __attribute__((aligned(0x1000))); // Address = [x]PT[0] (page tables) (struct page_map_entry)
 struct page_table_entry pt[512] __attribute__((aligned(0x1000))); // Address = base physical address (pages) (struct page_table_entry)
+struct page_table_entry pt2[512] __attribute__((aligned(0x1000))); // Address = base physical address (pages) (struct page_table_entry)
 
 // struct page_map_entry pdpt_framebuffer[512] __attribute__((aligned(0x1000))); // Address = [x]PD[0] (page directories) (struct page_map_entry)
 struct page_map_entry pdt_framebuffer[512] __attribute__((aligned(0x1000))); // Address = [x]PT[0] (page tables) (struct page_map_entry)
@@ -24,6 +25,10 @@ void create_pml4() {
 	pdt[0].next_entry_address = ((uint64_t)&pt) >> 12;
 	pdt[0].present = 1;
 	pdt[0].rw = 1;
+
+	pdt[1].next_entry_address = ((uint64_t)&pt2) >> 12;
+	pdt[1].present = 1;
+	pdt[1].rw = 1;
 
 	uint32_t fb_pml4_index = (_VESA_VIDEO_MODE_INFO.framebuffer >> 39) & 0x1FF;
 	uint32_t fb_pdp_index = (_VESA_VIDEO_MODE_INFO.framebuffer >> 30) & 0x1FF;
@@ -44,17 +49,22 @@ void create_pml4() {
 	pdt_framebuffer[fb_pd_index].present = 1;
 	pdt_framebuffer[fb_pd_index].rw = 1;
 
-	// Do first 0x1000 * 512 bytes
+	// Do first 2 MB
 	for (int i = 0; i < 512; i++) {
 		pt[i].physical_address_base = i;
 		pt[i].present = 1;
 		pt[i].rw = 1;
+
+		pt2[i].physical_address_base = i + 0x200;
+		pt2[i].present = 1;
+		pt2[i].rw = 1;
 	}
 
 	// Do framebuffer + 0x1000 * 512
 	uint32_t base = (_VESA_VIDEO_MODE_INFO.framebuffer);
+	printf("%X\n", base);
 	for (int i = 0; i < 512; i++) {
-		pt_framebuffer[i].physical_address_base = ((base) + i) >> 12;
+		pt_framebuffer[i].physical_address_base = ((base) >> 12) + i;
 		pt_framebuffer[i].present = 1;
 		pt_framebuffer[i].rw = 1;
 	}

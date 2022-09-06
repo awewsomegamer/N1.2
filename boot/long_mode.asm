@@ -65,7 +65,7 @@ isr0:
 
 [global isr1]
 isr1:
-	push 0
+	push 1
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -73,7 +73,7 @@ isr1:
 
 [global isr2]
 isr2:
-	push 0
+	push 2
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -81,7 +81,7 @@ isr2:
 
 [global isr3]
 isr3:
-	push 0
+	push 3
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -89,7 +89,7 @@ isr3:
 
 [global isr4]
 isr4:
-	push 0
+	push 4
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -97,7 +97,7 @@ isr4:
 
 [global isr5]
 isr5:
-	push 0
+	push 5
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -105,7 +105,7 @@ isr5:
 
 [global isr6]
 isr6:
-	push 0
+	push 6
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -113,7 +113,7 @@ isr6:
 
 [global isr7]
 isr7:
-	push 0
+	push 7
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -121,7 +121,7 @@ isr7:
 
 [global isr8]
 isr8:
-	push 0
+	push 8
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -129,7 +129,7 @@ isr8:
 
 [global isr9]
 isr9:
-	push 0
+	push 9
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -137,7 +137,7 @@ isr9:
 
 [global isr10]
 isr10:
-	push 0
+	push 10
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -145,7 +145,7 @@ isr10:
 
 [global isr11]
 isr11:
-	push 0
+	push 11
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -153,7 +153,7 @@ isr11:
 
 [global isr12]
 isr12:
-	push 0
+	push 12
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -161,7 +161,7 @@ isr12:
 
 [global isr13]
 isr13:
-	push 0
+	push 13
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -169,7 +169,7 @@ isr13:
 
 [global isr14]
 isr14:
-	push 0
+	push 14
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -177,7 +177,7 @@ isr14:
 
 [global isr15]
 isr15:
-	push 0
+	push 15
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -185,7 +185,7 @@ isr15:
 
 [global isr16]
 isr16:
-	push 0
+	push 16
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -193,7 +193,7 @@ isr16:
 
 [global isr17]
 isr17:
-	push 0
+	push 17
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -201,7 +201,7 @@ isr17:
 
 [global isr18]
 isr18:
-	push 0
+	push 18
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -209,7 +209,7 @@ isr18:
 
 [global isr19]
 isr19:
-	push 0
+	push 19
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -217,7 +217,7 @@ isr19:
 
 [global isr20]
 isr20:
-	push 0
+	push 20
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -225,7 +225,7 @@ isr20:
 
 [global isr21]
 isr21:
-	push 0
+	push 21
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -233,7 +233,7 @@ isr21:
 
 [global isr22]
 isr22:
-	push 0
+	push 22
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -241,7 +241,7 @@ isr22:
 
 [global isr23]
 isr23:
-	push 0
+	push 23
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -249,7 +249,7 @@ isr23:
 
 [global isr24]
 isr24:
-	push 0
+	push 24
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -257,7 +257,7 @@ isr24:
 
 [global isr25]
 isr25:
-	push 0
+	push 25
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -265,7 +265,7 @@ isr25:
 
 [global isr26]
 isr26:
-	push 0
+	push 26
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -273,7 +273,7 @@ isr26:
 
 [global isr27]
 isr27:
-	push 0
+	push 27
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -281,7 +281,7 @@ isr27:
 
 [global isr28]
 isr28:
-	push 0
+	push 28
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -289,7 +289,7 @@ isr28:
 
 [global isr29]
 isr29:
-	push 0
+	push 29
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -297,7 +297,7 @@ isr29:
 
 [global isr30]
 isr30:
-	push 0
+	push 30
 	PUSHALL
 	call isr_common_handler
 	POPALL
@@ -306,6 +306,8 @@ isr30:
 [global install_idt]
 [extern _idtr]
 install_idt:
+	mov r8, _idtr
+	jmp $
 	lidt [_idtr]
 	sti
 
