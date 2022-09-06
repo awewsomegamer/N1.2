@@ -220,27 +220,14 @@ void init_idt() {
 }
 
 void kmain() {
-	// init_idt();
-
-	// *(uint8_t*)0xFB000010 = 0x00;
-
-	// print_num(_VESA_VIDEO_MODE_INFO.framebuffer, 16);
-	// outb(0xE9, '\n');
-	// outb(0xE9, *((uint8_t*)&NUMBERS + 1));
-	// outb(0xE9, '\n');
-
-	struct VESA_INFO info = *(&_VESA_VIDEO_MODE_INFO);
-
-	for (int i = 0; i < 720*2; i++)
+	for (int i = 0; i < 720; i++)
 		for (int j = 0; j < 1280; j++) {
-			*(uint16_t*)(0xFD000000 + j + i * 1280) = 0x00;
+			*(uint16_t*)(0xFD000000 + j + i * 1280) = 0x55;
 
 			// *((uint8_t*)0xFD000000 + 2 + i * (1280 / 8) + j * 2) = 0xFF;
 			// *((uint8_t*)0xFD000000 + 1 + i * (1280 / 8) + j * 2) = 0x00;
 			// *((uint8_t*)0xFD000000 + 0 + i * (1280 / 8) + j * 2) = 0x00;
 		}
-
-	// *(uint8_t*)0x200000 = 0xA;
 
 	for (;;);
 }

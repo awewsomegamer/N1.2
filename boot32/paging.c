@@ -61,10 +61,8 @@ void create_pml4() {
 	}
 
 	// Do framebuffer + 0x1000 * 512
-	uint32_t base = (_VESA_VIDEO_MODE_INFO.framebuffer);
-	printf("%X\n", base);
 	for (int i = 0; i < 512; i++) {
-		pt_framebuffer[i].physical_address_base = ((base) >> 12) + i;
+		pt_framebuffer[i].physical_address_base = (_VESA_VIDEO_MODE_INFO.framebuffer >> 12) + i;
 		pt_framebuffer[i].present = 1;
 		pt_framebuffer[i].rw = 1;
 	}

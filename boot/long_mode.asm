@@ -306,8 +306,6 @@ isr30:
 [global install_idt]
 [extern _idtr]
 install_idt:
-	mov r8, _idtr
-	jmp $
 	lidt [_idtr]
 	sti
 
