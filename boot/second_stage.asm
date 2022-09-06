@@ -41,7 +41,7 @@ jmp CODE32_OFFSET:PROTECTED_MODE
 
 [bits 32]
 [extern protected_mode_entry]
-[extern puts]
+[extern printf]
 [extern pml4]
 
 PROTECTED_MODE:
@@ -55,6 +55,10 @@ PROTECTED_MODE:
 	
 	; Do more complicated things in C
 	call protected_mode_entry
+
+	push _VESA_VIDEO_MODE_INFO
+	push STANDARD_HEX
+	call printf
 
 	; Checks for 64 bit mode
 	call cpuid_check
@@ -87,11 +91,11 @@ PROTECTED_MODE:
 	mov ss, ax
 
 	; Pass information to the kernel
-	push _MEMORY_MAP_ENTRIES_FOUND
-	push _MEMORY_MAP_DATA
-	push _BIOS_VESA_INFO
-	push _VESA_VIDEO_MODE_INFO
-	push _VIDEO_FONT
+	; push _MEMORY_MAP_ENTRIES_FOUND
+	; push _MEMORY_MAP_DATA
+	; push _BIOS_VESA_INFO
+	mov eax, _VESA_VIDEO_MODE_INFO
+	; push _VIDEO_FONT
 
 	jmp CODE64_OFFSET:LONG_MODE_ENTRY
 
@@ -114,7 +118,7 @@ cpuid_check:
 	jnz .ret
 
 	push CPUID_NOT_FOUND
-	call puts
+	call printf
 	jmp $
 
 	.ret:
@@ -127,7 +131,7 @@ long_mode_check:
 	jge .next
 
 	push NO_EXTENDED_FUNCTIONS_FOUND
-	call puts
+	call printf
 	jmp $
 
 	.next:
@@ -138,7 +142,7 @@ long_mode_check:
 	jnz .ret
 
 	push NO_LONG_MODE_FOUND
-	call puts
+	call printf
 	jmp $
 
 	.ret:
@@ -192,6 +196,8 @@ CPUID_NOT_FOUND: db "No CPUID was found", 0xA, 0xD, 0x0
 NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0xD, 0x0
 NO_LONG_MODE_FOUND: db "Long mode was found", 0xA, 0xD, 0x0
 ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
+STANDARD_HEX: db "%X", 0xA, 0xD, 0x0
+
 LONG_MODE_ENTRY equ 0xD000
 
 [global _VIDEO_FONT]
