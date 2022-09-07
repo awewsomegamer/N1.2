@@ -1,109 +1,80 @@
 [bits 16]
 
-; DL - Boot disk
-; AX - Sectors to read
-; EBX - Buffer
-; CL - Sector to start from
+; AX - Number of sectors to read
 ; CH - Cylinder number
+; CL - Sector number
 ; DH - Head number
+; EBX - Buffer
+; DL - Drive
 read_disk:
-	cmp byte [DAP_SUPPORT], 1
-	je dap_read
-
+	; Check for extension
+	pushfd
 	pushad
 	mov ah, 0x41
 	mov bx, 0x55AA
 	int 0x13
+	jnc .supported
 	popad
+	popfd
 
+	jmp read_with_chs
 
-	jnc .dap_read
-	jmp chs_read
-	.dap_read:
-		mov byte [DAP_SUPPORT], 0x1
-		jmp dap_read
+	.supported:
+		popad
+		popfd
+		jmp read_with_dap
 
-chs_read:
-	mov ah, 0x02
+read_with_dap:
+	mov word [DAP_Base_Packet.sectors_to_read], ax
+	mov dword [DAP_Base_Packet.buffer], ebx
 
-	int 0x13
-
-	jnc .ret
-
-	mov bx, FAILED_TO_READ_DISK_WITH_CHS
-	call print_string
-	jmp $
-
-	.ret:
-	ret	
-
-dap_read:
-	pushad
-		mov bx, READING_DAP
-		call print_string
-	popad
-
-
-	mov word [DAP_Packet.sectors_to_read], ax
-	mov dword [DAP_Packet.buffer], ebx
 	
-	xor eax, eax
-	push cx
-		mov cl, ch
-		mov ch, 0x0
-		mov ax, cx
-	pop cx
+	; Do CHS to LBA calculation
 	
-	imul eax, HPC
 
-	push dx
-		mov dl, dh
-		mov dh, 0x0
-		add ax, dx
-	pop dx
-	
-	imul eax, 63
-
-	push cx
-		mov ch, 0x0
-		add ax, cx
-	pop cx
-
-	sub eax, 1
-	
-	mov dword [DAP_Packet.lba], eax
-
+	mov si, DAP_Base_Packet
 	mov ah, 0x42
-	mov si, DAP_Packet
 	int 0x13
+
 	jnc .ret
 
-	mov bx, FAILED_TO_READ_DISK_WITH_DAP
+	pushad
+	mov bx, DAP_READ_ERROR
 	call print_string
+	popad
 
-	jmp chs_read
+	jmp read_with_chs
 
 	.ret:
 	ret
 
-DAP_Packet:
+read_with_chs:
+	mov ah, 0x02
+	
+	int 0x13
+
+	jnc .ret
+
+	mov bx, CHS_READ_ERROR
+	call print_string
+	jmp $
+
+	.ret:
+	ret
+
+DAP_Base_Packet:
 	db 0x10
-	db 0x00
+	db 0x0
 	.sectors_to_read:
 	dw 0x0
 	.buffer:
 	dd 0x0
-	.lba:
-	dq 1
+	.lba
+	dq 0x0
 
 
-; Make these dynamic
 HPC equ 16
-SPT equ 63 
+SPT equ 63
 
-[section .data]
-DAP_SUPPORT: db 0x0
-FAILED_TO_READ_DISK_WITH_DAP: db "Failed to read the disk with DAP, defaulting to CHS", 0xA, 0xD, 0x0
-FAILED_TO_READ_DISK_WITH_CHS: db "Failed to read the disk with CHS", 0xA, 0xD, 0x0
-READING_DAP: db "Reading with DAP", 0xA, 0xD, 0x0
-[section .text]
+CHS_READ_ERROR: db "Could not read the disk with CHS", 0xA, 0xD, 0x0
+DAP_READ_ERROR: db "Could not read the disk with DAP, trying CHS", 0xA, 0xD, 0x0

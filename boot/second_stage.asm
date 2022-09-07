@@ -1,15 +1,12 @@
 [bits 16]
 
-mov ah, 0x0E
-mov al, 'A'
-int 0x10
-
 ;Load in kernel
 mov ax, KERNEL_SECTOR_SIZE
 mov ebx, KERNEL_BUFFER
 mov cl, SECOND_STAGE_END_SECTOR
 mov ch, 0x0
 mov dh, 0x0
+stc
 call read_disk
 
 mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
