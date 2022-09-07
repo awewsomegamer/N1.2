@@ -12,11 +12,24 @@ mov ss, ax
 mov bx, BOOT_MESSAGE
 call print_string
 
+; AX - Sectors to read
+; EBX - Buffer
+; CL - Sector to start from
+; CH - Cylinder number
+; DH - Head number
+
+mov dl, [BOOT_DISK]
+mov ax, SECTORS_TO_READ
+mov ebx, SECOND_STAGE
+mov cl, 0x2
+mov ch, 0x0
+mov dh, 0x0
 call read_disk
 
 mov bx, DISK_READ_MESSAGE
 call print_string
 
+mov dl, [BOOT_DISK]
 jmp SECOND_STAGE
 
 %include "print.asm"

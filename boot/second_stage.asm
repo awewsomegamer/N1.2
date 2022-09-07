@@ -1,7 +1,21 @@
 [bits 16]
 
-mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
+mov ah, 0x0E
+mov al, 'A'
+int 0x10
 
+;Load in kernel
+mov ax, KERNEL_SECTOR_SIZE
+mov ebx, KERNEL_BUFFER
+mov cl, SECOND_STAGE_END_SECTOR
+mov ch, 0x0
+mov dh, 0x0
+call read_disk
+
+mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
+call print_string
+
+; Get memory map using 0xE820
 call get_memory_map
 
 ; Memory map success
@@ -162,6 +176,7 @@ long_mode_check:
 
 %include "GDT.asm"
 %include "print.asm"
+%include "disk.asm"
 
 ; VESA information
 %include "VESA.asm"
@@ -176,6 +191,11 @@ _TOP_VESA_WIDTH: dw 0x0
 _TOP_VESA_HEIGHT: dw 0x0
 _TOP_VESA_MODE: dw 0x0
 _TOP_VESA_BPP: db 0x0
+
+; Kernel DAP
+SECOND_STAGE_END_SECTOR equ 42
+KERNEL_SECTOR_SIZE equ 1
+KERNEL_BUFFER equ 0x20000
 
 ; Memory map
 %include "memory_map.asm"

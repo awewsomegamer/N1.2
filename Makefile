@@ -4,6 +4,7 @@ all:
 	make -C kernel
 	make -C bin
 
+	fdisk -l bootloader.bin
 	fdisk -l disk.bin
 
 run: all
