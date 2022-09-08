@@ -6,7 +6,8 @@ mov ebx, KERNEL_BUFFER
 mov cl, SECOND_STAGE_END_SECTOR
 mov ch, 0x0
 mov dh, 0x0
-stc
+mov edi, SECOND_STAGE_END_SECTOR
+
 call read_disk
 
 mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
@@ -108,7 +109,7 @@ PROTECTED_MODE:
 	mov eax, _VESA_VIDEO_MODE_INFO
 	; push _VIDEO_FONT
 
-	jmp CODE64_OFFSET:LONG_MODE_ENTRY
+	jmp CODE64_OFFSET:KERNEL_BUFFER
 
 cpuid_check:
 	pushfd
@@ -158,16 +159,6 @@ long_mode_check:
 
 	.ret:
 	ret
-
-; Switch to 32-bit PM
-	; Pre-kernel
-	; Generate PML4 map
-	; Identity page first page table
-	; Good practice to load ISRs for some basic error handling
-
-; Switch to 64-bit Long Mode
-	; Hand control to 64 bit kernel
-	
 
 [bits 16]
 
