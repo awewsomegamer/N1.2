@@ -13,7 +13,7 @@ all:
 	ld $(LD32FLAGS) second_stage_asm.o ./32_bin/* -o second_stage.bin
 	ld $(LD64FLAGS) long_mode_asm.o  ./64_bin/* -o kernel.bin
 
-	cat boot.bin second_stage.bin > ../bootloader.bin
+	cat boot.bin second_stage.bin empty_sector.bin > ../bootloader.bin
 	cat ../bootloader.bin kernel.bin > ../disk.bin
 
 clean:

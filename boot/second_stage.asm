@@ -72,10 +72,6 @@ PROTECTED_MODE:
 	; Do more complicated things in C
 	call protected_mode_entry
 
-	push _VESA_VIDEO_MODE_INFO
-	push STANDARD_HEX
-	call printf
-
 	; Checks for 64 bit mode
 	call cpuid_check
 	call long_mode_check
@@ -185,7 +181,7 @@ _TOP_VESA_MODE: dw 0x0
 _TOP_VESA_BPP: db 0x0
 
 ; Kernel DAP
-SECOND_STAGE_END_SECTOR equ 42
+SECOND_STAGE_END_SECTOR equ 43
 KERNEL_SECTOR_SIZE equ 1
 KERNEL_BUFFER equ 0x500
 
