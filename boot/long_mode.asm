@@ -1,6 +1,8 @@
 [bits 64]
 [extern kmain]
 
+db "KERNEL ENTRY"
+
 ; push _MEMORY_MAP_ENTRIES_FOUND
 ; push _MEMORY_MAP_DATA
 ; push _BIOS_VESA_INFO

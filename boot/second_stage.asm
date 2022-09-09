@@ -1,16 +1,20 @@
 [bits 16]
 
+pushad
+mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
+call print_string
+popad
+
 ;Load in kernel
 mov ax, KERNEL_SECTOR_SIZE
 mov ebx, KERNEL_BUFFER
 mov cl, SECOND_STAGE_END_SECTOR
 mov ch, 0x0
 mov dh, 0x0
-mov edi, SECOND_STAGE_END_SECTOR
-
+mov esi, DAP_Packet
 call read_disk
 
-mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
+mov bx, READ_IN_KERNEL
 call print_string
 
 ; Get memory map using 0xE820
@@ -183,7 +187,14 @@ _TOP_VESA_BPP: db 0x0
 ; Kernel DAP
 SECOND_STAGE_END_SECTOR equ 42
 KERNEL_SECTOR_SIZE equ 1
-KERNEL_BUFFER equ 0x20000
+KERNEL_BUFFER equ 0x500
+
+DAP_Packet:
+	db 0x10
+	db 0x0
+	dw KERNEL_SECTOR_SIZE ; Sectors to read
+	dd KERNEL_BUFFER ; Buffer
+	dq SECOND_STAGE_END_SECTOR - 1 ; LBA
 
 ; Memory map
 %include "memory_map.asm"
@@ -202,9 +213,9 @@ SUCCESSFULLY_ENABLED_VESA: db "Successfully enabled VESA mode", 0xA, 0xD, 0x0
 VESA_ALGORITHM_ENCOUNTERED_ERROR: db "Vesa algorithm encoutnered an error", 0xA, 0xD, 0x0
 CPUID_NOT_FOUND: db "No CPUID was found", 0xA, 0xD, 0x0
 NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0xD, 0x0
-NO_LONG_MODE_FOUND: db "Long mode was found", 0xA, 0xD, 0x0
+NO_LONG_MODE_FOUND: db "Long mode was not found", 0xA, 0xD, 0x0
 ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
-STANDARD_HEX: db "%X", 0xA, 0xD, 0x0
+READ_IN_KERNEL: db "Kernel loaded", 0xA, 0xD, 0x0
 
 LONG_MODE_ENTRY equ 0xD000
 
