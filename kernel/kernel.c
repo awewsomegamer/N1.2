@@ -38,7 +38,7 @@ struct VESA_INFO {
 	uint8_t reserved1[206];
 } __attribute__ ((packed));
 
-extern uint64_t _VESA_VIDEO_MODE_INFO;
+extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 // extern uint8_t NUMBERS;
 /*
 	Plan:
@@ -219,16 +219,18 @@ void outb(uint16_t address, uint8_t value) {
 // 	install_idt();
 // }
 
+extern char* ALPHABET;
+
 void putn(uint64_t num, uint64_t base) {
 	if (num / base != 0)
 		putn(num / base, base);
 
-	outb(0xE9, (*((uint8_t*)0xC14C + (num % base))));
+	outb(0xE9, *((uint8_t*)0x51A + (num % base))); //(*(ALPHABET + (num % base)))
 }
 
 void kmain() {
-	struct VESA_INFO* info = (struct VESA_INFO*)0x840D;
-	putn(info->framebuffer, 16);
+	// struct VESA_INFO* info = (struct VESA_INFO*)0x840D;
+	// putn(_VESA_VIDEO_MODE_INFO, 16);
 
 	// for (int i = 0; i < info->height; i++)
 	// 	for (int j = 0; j < info->width; j++)

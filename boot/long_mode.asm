@@ -1,5 +1,6 @@
 [bits 64]
 [extern kmain]
+[extern putn]
 
 db "KERNEL ENTRY"
 
@@ -9,17 +10,25 @@ db "KERNEL ENTRY"
 ; push _VESA_VIDEO_MODE_INFO
 ; push _VIDEO_FONT
 
+pop rax
+; push 16
+push rax
+call putn
+
 ; pop rax
 ; mov dword [_MEMORY_MAP_ENTRIES_FOUND], eax
 ; pop rax
 ; mov dword [_MEMORY_MAP_DATA], eax
 ; pop rax
 ; mov dword [_BIOS_VESA_INFO], eax
-mov [_VESA_VIDEO_MODE_INFO], rax
+; mov [_VESA_VIDEO_MODE_INFO], rax
 ; pop rax
 ; mov dword [_VIDEO_FONT], eax
 
 jmp kmain
+
+[global ALPHABET]
+ALPHABET: db "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ", 0x0
 
 ; %macro PUSHALL 0
 ; 	push rax

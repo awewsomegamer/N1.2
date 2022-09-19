@@ -5,7 +5,7 @@ mov bx, SUCCESSFULLY_REACHED_STAGE_TWO
 call print_string
 popad
 
-;Load in kernel
+; Load in kernel
 mov ax, KERNEL_SECTOR_SIZE
 mov ebx, KERNEL_BUFFER
 mov cl, SECOND_STAGE_END_SECTOR
@@ -103,11 +103,11 @@ PROTECTED_MODE:
 	mov ss, ax
 
 	; Pass information to the kernel
-	; push _MEMORY_MAP_ENTRIES_FOUND
-	; push _MEMORY_MAP_DATA
-	; push _BIOS_VESA_INFO
-	mov eax, _VESA_VIDEO_MODE_INFO
-	; push _VIDEO_FONT
+	push _MEMORY_MAP_ENTRIES_FOUND
+	push _MEMORY_MAP_DATA
+	push _BIOS_VESA_INFO
+	push _VESA_VIDEO_MODE_INFO
+	push _VIDEO_FONT
 
 	jmp CODE64_OFFSET:KERNEL_BUFFER
 
@@ -212,8 +212,7 @@ NO_EXTENDED_FUNCTIONS_FOUND: db "No extended CPUID functions were found", 0xA, 0
 NO_LONG_MODE_FOUND: db "Long mode was not found", 0xA, 0xD, 0x0
 ENTERED_LONG_MODE: db "Entered long mode", 0xA, 0xD, 0x0
 READ_IN_KERNEL: db "Kernel loaded", 0xA, 0xD, 0x0
-
-LONG_MODE_ENTRY equ 0xD000
+STD_HEX: db "%X", 0xA, 0xD, 0x0
 
 [global _VIDEO_FONT]
 _VIDEO_FONT: resb 0x1000
