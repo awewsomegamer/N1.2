@@ -102,12 +102,15 @@ PROTECTED_MODE:
 	mov gs, ax
 	mov ss, ax
 
+	mov ebp, 0x20000
+	mov esp, ebp
+
 	; Pass information to the kernel
-	push _MEMORY_MAP_ENTRIES_FOUND
-	push _MEMORY_MAP_DATA
-	push _BIOS_VESA_INFO
+	; push _MEMORY_MAP_ENTRIES_FOUND
+	; push _MEMORY_MAP_DATA
+	; push _BIOS_VESA_INFO
 	push _VESA_VIDEO_MODE_INFO
-	push _VIDEO_FONT
+	; push _VIDEO_FONT
 
 	jmp CODE64_OFFSET:KERNEL_BUFFER
 

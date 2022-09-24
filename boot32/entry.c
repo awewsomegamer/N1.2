@@ -11,6 +11,6 @@ void protected_mode_entry() {
 	printf("+-----------------------+\n");
 	printf("Resolution: %dx%d%x%d\n", _VESA_VIDEO_MODE_INFO.width, _VESA_VIDEO_MODE_INFO.height, _VESA_VIDEO_MODE_INFO.bpp);
 	printf("Framebuffer located at 0x%X\n", _VESA_VIDEO_MODE_INFO.framebuffer);
-	
+
 	create_pml4();
 }

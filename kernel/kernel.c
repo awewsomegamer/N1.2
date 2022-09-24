@@ -225,12 +225,12 @@ void putn(uint64_t num, uint64_t base) {
 	if (num / base != 0)
 		putn(num / base, base);
 
-	outb(0xE9, *((uint8_t*)0x51A + (num % base))); //(*(ALPHABET + (num % base)))
+	outb(0xE9, *(ALPHABET + (num % base))); //(*(ALPHABET + (num % base)))
 }
 
 void kmain() {
 	// struct VESA_INFO* info = (struct VESA_INFO*)0x840D;
-	// putn(_VESA_VIDEO_MODE_INFO, 16);
+	putn(_VESA_VIDEO_MODE_INFO, 16);
 
 	// for (int i = 0; i < info->height; i++)
 	// 	for (int j = 0; j < info->width; j++)

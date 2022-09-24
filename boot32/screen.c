@@ -20,6 +20,8 @@ void clrscr() {
 		for (int j = 0; j < _VESA_VIDEO_MODE_INFO.width; j++) {
 			PUT_PIXEL(j, i, (j*i) % 0xFF);
 		}
+	
+	printf("Font at %X\n", &_VIDEO_FONT);
 }
 
 void putc(char c) {

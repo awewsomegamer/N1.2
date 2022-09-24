@@ -11,9 +11,7 @@ db "KERNEL ENTRY"
 ; push _VIDEO_FONT
 
 pop rax
-; push 16
-push rax
-call putn
+mov [_VESA_VIDEO_MODE_INFO], rax
 
 ; pop rax
 ; mov dword [_MEMORY_MAP_ENTRIES_FOUND], eax
