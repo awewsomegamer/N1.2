@@ -1,44 +1,44 @@
 #include <stdint.h>
 
-struct VESA_INFO {
-	uint16_t attributes;
-	uint8_t window_a;	
-	uint8_t window_b;	
-	uint16_t granularity;
-	uint16_t window_size;
-	uint16_t segment_a;
-	uint16_t segment_b;
-	uint32_t win_func_ptr;		
-	uint16_t pitch;			
-	uint16_t width;			
-	uint16_t height;			
-	uint8_t w_char;			
-	uint8_t y_char;			
-	uint8_t planes;
-	uint8_t bpp;			
-	uint8_t banks;			
-	uint8_t memory_model;
-	uint8_t bank_size;		
-	uint8_t image_pages;
-	uint8_t reserved0;
+// struct VESA_INFO {
+// 	uint16_t attributes;
+// 	uint8_t window_a;	
+// 	uint8_t window_b;	
+// 	uint16_t granularity;
+// 	uint16_t window_size;
+// 	uint16_t segment_a;
+// 	uint16_t segment_b;
+// 	uint32_t win_func_ptr;		
+// 	uint16_t pitch;			
+// 	uint16_t width;			
+// 	uint16_t height;			
+// 	uint8_t w_char;			
+// 	uint8_t y_char;			
+// 	uint8_t planes;
+// 	uint8_t bpp;			
+// 	uint8_t banks;			
+// 	uint8_t memory_model;
+// 	uint8_t bank_size;		
+// 	uint8_t image_pages;
+// 	uint8_t reserved0;
  
-	uint8_t red_mask;
-	uint8_t red_position;
-	uint8_t green_mask;
-	uint8_t green_position;
-	uint8_t blue_mask;
-	uint8_t blue_position;
-	uint8_t reserved_mask;
-	uint8_t reserved_position;
-	uint8_t direct_color_attributes;
+// 	uint8_t red_mask;
+// 	uint8_t red_position;
+// 	uint8_t green_mask;
+// 	uint8_t green_position;
+// 	uint8_t blue_mask;
+// 	uint8_t blue_position;
+// 	uint8_t reserved_mask;
+// 	uint8_t reserved_position;
+// 	uint8_t direct_color_attributes;
  
-	uint32_t framebuffer;		
-	uint32_t off_screen_mem_off;
-	uint16_t off_screen_mem_size;	
-	uint8_t reserved1[206];
-} __attribute__ ((packed));
+// 	uint32_t framebuffer;		
+// 	uint32_t off_screen_mem_off;
+// 	uint16_t off_screen_mem_size;	
+// 	uint8_t reserved1[206];
+// } __attribute__ ((packed));
 
-extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
+// extern struct VESA_INFO* _VESA_VIDEO_MODE_INFO;
 // extern uint8_t NUMBERS;
 /*
 	Plan:
@@ -219,19 +219,20 @@ void outb(uint16_t address, uint8_t value) {
 // 	install_idt();
 // }
 
-extern char* ALPHABET;
+extern uint8_t* ALPHABET;
 
 void putn(uint64_t num, uint64_t base) {
 	if (num / base != 0)
 		putn(num / base, base);
 
-	outb(0xE9, *(ALPHABET + (num % base))); //(*(ALPHABET + (num % base)))
+	outb(0xE9, *((uint8_t*)0x55B + (num % base))); //(*(ALPHABET + (num % base)))
 }
 
-void kmain() {
-	// struct VESA_INFO* info = (struct VESA_INFO*)0x840D;
-	putn(_VESA_VIDEO_MODE_INFO, 16);
+extern uint64_t _VIDEO_FONT;
 
+void kmain() {
+	struct VESA_INFO* info = (struct VESA_INFO*)0x840D;
+	
 	// for (int i = 0; i < info->height; i++)
 	// 	for (int j = 0; j < info->width; j++)
 	// 		*(uint8_t*)(info->framebuffer + 2 + j * (info->bpp / 8) + i * info->pitch) = (j * 800) % info->width;

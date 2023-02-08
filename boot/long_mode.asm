@@ -10,9 +10,20 @@ db "KERNEL ENTRY"
 ; push _VESA_VIDEO_MODE_INFO
 ; push _VIDEO_FONT
 
-pop rax
-mov [_VESA_VIDEO_MODE_INFO], rax
+mov eax, dword [0x20000]
+mov dword [_MEMORY_MAP_ENTRIES_FOUND], eax ; 0x8639
+mov eax, dword [0x20004]
+mov dword [_MEMORY_MAP_DATA], eax
+mov eax, dword [0x20008]
+mov dword [_BIOS_VESA_INFO], eax
+mov eax, dword [0x2000C]
+mov dword [_VESA_VIDEO_MODE_INFO], eax
+mov eax, dword [0x200F]
+mov dword [_VIDEO_FONT], eax
 
+
+; pop rax
+; mov [_VESA_VIDEO_MODE_INFO], rax
 ; pop rax
 ; mov dword [_MEMORY_MAP_ENTRIES_FOUND], eax
 ; pop rax
@@ -323,6 +334,7 @@ ALPHABET: db "0123456789ABCDEFGHIJKLMNOPQRSTUVWYZ", 0x0
 
 ; 	ret
 
+[section .bss]
 ; Pointers
 [global _VIDEO_FONT]
 _VIDEO_FONT: dq 0x0

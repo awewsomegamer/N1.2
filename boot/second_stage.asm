@@ -102,15 +102,12 @@ PROTECTED_MODE:
 	mov gs, ax
 	mov ss, ax
 
-	mov ebp, 0x20000
-	mov esp, ebp
-
 	; Pass information to the kernel
-	; push _MEMORY_MAP_ENTRIES_FOUND
-	; push _MEMORY_MAP_DATA
-	; push _BIOS_VESA_INFO
-	push _VESA_VIDEO_MODE_INFO
-	; push _VIDEO_FONT
+	mov [0x20000], dword _MEMORY_MAP_ENTRIES_FOUND
+	mov [0x20004], dword _MEMORY_MAP_DATA
+	mov [0x20008], dword _BIOS_VESA_INFO
+	mov [0x2000C], dword _VESA_VIDEO_MODE_INFO
+	mov [0x2000F], dword _VIDEO_FONT
 
 	jmp CODE64_OFFSET:KERNEL_BUFFER
 
@@ -186,14 +183,15 @@ _TOP_VESA_BPP: db 0x0
 ; Kernel DAP
 SECOND_STAGE_END_SECTOR equ 43
 KERNEL_SECTOR_SIZE equ 1
-KERNEL_BUFFER equ 0x500
+KERNEL_BUFFER equ 0x100000
 
 DAP_Packet:
 	db 0x10
 	db 0x0
 	dw KERNEL_SECTOR_SIZE ; Sectors to read
-	dd KERNEL_BUFFER ; Buffer
+	dd 0xFFFF ; Use 64-bit buffer
 	dq SECOND_STAGE_END_SECTOR - 1 ; LBA
+	dq KERNEL_BUFFER ; 64-bit buffer
 
 ; Memory map
 %include "memory_map.asm"
